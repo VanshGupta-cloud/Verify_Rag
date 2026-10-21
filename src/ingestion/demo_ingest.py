@@ -35,7 +35,7 @@ def run_demo(file_path: str = "PRD.md", query: str = "How does VerifyRAG reduce 
     t0 = time.perf_counter()
     doc = parse_document(target_path)
     t_parse = (time.perf_counter() - t0) * 1000
-    print(f"  ✓ Parsed doc_id='{doc.doc_id}', filename='{doc.filename}', "
+    print(f"  [OK] Parsed doc_id='{doc.doc_id}', filename='{doc.filename}', "
           f"length={len(doc.content)} chars, pages={doc.num_pages} ({t_parse:.2f} ms)")
 
     print("\nStep 2: Chunking document ...")
@@ -46,21 +46,21 @@ def run_demo(file_path: str = "PRD.md", query: str = "How does VerifyRAG reduce 
     )
     chunks = chunker.chunk_document(doc_id=doc.doc_id, text=doc.content)
     t_chunk = (time.perf_counter() - t0) * 1000
-    print(f"  ✓ Created {len(chunks)} chunks ({t_chunk:.2f} ms)")
+    print(f"  [OK] Created {len(chunks)} chunks ({t_chunk:.2f} ms)")
 
     print("\nStep 3: Indexing chunks into Vector Store ...")
     t0 = time.perf_counter()
     vector_store = VectorStore()
     indexed_count = vector_store.add_chunks(chunks)
     t_index = (time.perf_counter() - t0) * 1000
-    print(f"  ✓ Indexed {indexed_count} chunks into in-memory vector store ({t_index:.2f} ms)")
+    print(f"  [OK] Indexed {indexed_count} chunks into in-memory vector store ({t_index:.2f} ms)")
 
     print(f"\nStep 4: Executing Semantic Similarity Search ...")
     print(f"  Query: \"{query}\"")
     t0 = time.perf_counter()
     retrieved = vector_store.search(query, top_k=settings.top_k_chunks)
     t_search = (time.perf_counter() - t0) * 1000
-    print(f"  ✓ Retrieved {len(retrieved)} chunks ({t_search:.2f} ms)\n")
+    print(f"  [OK] Retrieved {len(retrieved)} chunks ({t_search:.2f} ms)\n")
 
     print("-" * 70)
     print(" Top Retrieved Chunks:")

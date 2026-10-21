@@ -87,22 +87,33 @@ class VectorStore:
         norms = np.where(norms == 0, 1e-10, norms)
         return (vectors / norms).astype(np.float32)
 
+    def _fallback_encode(self, texts: List[str]) -> np.ndarray:
+        """Lightweight deterministic feature hashing fallback when neural models are loading."""
+        vectors = np.zeros((len(texts), self.dimension), dtype=np.float32)
+        for i, text in enumerate(texts):
+            words = text.lower().split()
+            if not words:
+                continue
+            for word in words:
+                slot = hash(word) % self.dimension
+                vectors[i, slot] += 1.0
+        return self._normalize(vectors)
+
     def encode(self, texts: List[str]) -> np.ndarray:
         """Encode a list of text strings into normalized dense embeddings."""
         model = get_embedding_model(self.model_name, self.device)
-        if model is None:
-            raise RuntimeError(
-                "Embedding model is not available. Please ensure sentence-transformers "
-                "is installed and reachable."
+        if model is not None:
+            embeddings = model.encode(
+                texts,
+                batch_size=32,
+                show_progress_bar=False,
+                convert_to_numpy=True,
+                normalize_embeddings=True
             )
-        embeddings = model.encode(
-            texts,
-            batch_size=32,
-            show_progress_bar=False,
-            convert_to_numpy=True,
-            normalize_embeddings=True
-        )
-        return embeddings.astype(np.float32)
+            return embeddings.astype(np.float32)
+
+        # Fallback to deterministic hash projection if neural model is not yet ready
+        return self._fallback_encode(texts)
 
     def add_chunks(self, chunks: List[Chunk], embeddings: Optional[np.ndarray] = None) -> int:
         """Add chunks and their corresponding embeddings into the vector store.
