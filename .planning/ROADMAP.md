@@ -11,11 +11,14 @@
   - [x] Task 4: `src/ingestion/vector_store.py` - FAISS dense index with SentenceTransformers & canonical `Chunk` return.
   - [x] Task 5: Integration test verifying parser -> chunker -> vector_store -> top-k retrieval (11/11 tests passing).
 
-## Phase 2: Generation & Claim Decomposition (Next)
-- [ ] Modular LLM generation adapter (`src/pipeline/generator.py`).
-- [ ] Atomic claim decomposition engine (`src/pipeline/claim_splitter.py`).
+## Phase 2: Generation & Claim Decomposition (Completed)
+- [x] Plan 02-01: Milestone 2 Generation & Claim Decomposition
+  - [x] Task 1: Modular LLM generation adapter (`src/pipeline/generator.py`).
+  - [x] Task 2: Atomic claim decomposition engine (`src/pipeline/claim_splitter.py`).
+  - [x] Task 3: Interactive CLI demo (`src/pipeline/demo_pipeline_m2.py`).
+  - [x] Task 4: Unit & integration test suite (`tests/test_milestone_2.py` - 14/14 passing).
 
-## Phase 3: NLI Verification & Remediation Engine
+## Phase 3: NLI Verification & Remediation Engine (Next)
 - [ ] Batched DeBERTa cross-encoder verifier (`src/pipeline/verifier.py`).
 - [ ] Remediation algorithms (`src/pipeline/remediator.py`).
 - [ ] Pipeline orchestrator (`src/pipeline/orchestrator.py`).
